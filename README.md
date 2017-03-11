@@ -11,6 +11,8 @@ I use [Source Code Pro](https://github.com/adobe-fonts/source-code-pro) when I c
         - ⌈ [UTF-8 E2 8C 88](http://apps.timwhitlock.info/unicode/inspect?s=%E2%8C%88)
         - ⌋ [UTF-8 E2 8C 8B](http://apps.timwhitlock.info/unicode/inspect?s=%E2%8C%8B)
         - Use 'ln' or use no symbols at all
+        - № [UTF-8 E2 84 96](http://apps.timwhitlock.info/unicode/inspect?s=%E2%84%96)
+        - ☰ [UTF-8 E2 98 B0](http://apps.timwhitlock.info/unicode/inspect?s=%E2%98%B0)
 - 🔒[UTF-8 F0 9F 94 92](http://apps.timwhitlock.info/unicode/inspect?s=%F0%9F%94%92)
 - 💩[UTF-8 F0 9F 92 A9](http://apps.timwhitlock.info/unicode/inspect?s=%F0%9F%92%A9)
 - ○ [UTF-8 E2 97 A6](http://apps.timwhitlock.info/unicode/inspect?s=%E2%97%A6)
