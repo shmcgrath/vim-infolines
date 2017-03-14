@@ -1,6 +1,6 @@
 " infolines.vim
 " Author: Sarah H. McGrath <https://www.shmcgrath.com>
-" Version: 0.0.1
+" Version: 0.0.2
 
 " TODO: MAKE A LOADED VARIABLE
 
