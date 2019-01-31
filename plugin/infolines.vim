@@ -7,15 +7,6 @@
 "------------------------------------------------------------------------------
 " GLOBAL INFOLINE SYMBOL VARIABLES
 "------------------------------------------------------------------------------
-let s:dict_infoline_unicode ={'git': '⎇',
-                        \ 'line': '☰',
-                        \ 'lock': '🔒',
-                        \ 'read': 'RO',
-                        \ 'mod': '○',
-                        \ 'unmod': '●',
-                        \ 'bad': '💩',
-                        \ 'sep_short': '▪',
-                        \ 'sep_tall': '‖',}
 
 let s:dict_infoline_text ={'git': 'git',
                         \ 'line': 'ln',
@@ -47,12 +38,6 @@ let g:infoline_tab= 0
 
 if g:infoline_unicode == 0 || g:infoline_unicode >= 4
     call GetInfolineChars(s:dict_infoline_text)
-elseif g:infoline_unicode == 1
-    call GetInfolineChars(s:dict_infoline_unicode)
-elseif g:infoline_unicode == 2
-    call GetInfolineChars(g:dict_user_text)
-elseif g:infoline_unicode == 3
-    call GetInfolineChars(g:dict_user_unicode)
 endif
 
 "------------------------------------------------------------------------------
