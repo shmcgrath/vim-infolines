@@ -1,99 +1,20 @@
 " infolines.vim
 " Author: Sarah H. McGrath <https://www.shmcgrath.com>
-" Version: 0.0.2
+" Version: 0.0.3
 
-" TODO: MAKE A LOADED VARIABLE
+" Global Infoline symbol variables
+let g:infoline_git = 'git'
+let g:infoline_line = 'ln'
+let g:infoline_lock = 'X'
+let g:infoline_read = 'RO'
+let g:infoline_mod = '+'
+let g:infoline_unmod = '-'
+let g:infoline_bad = '!'
+let g:infoline_sep_short = '-'
+let g:infoline_sep_tall = '|'
+let g:infoline_sep_round = '*'
 
-"------------------------------------------------------------------------------
-" GLOBAL INFOLINE SYMBOL VARIABLES
-"------------------------------------------------------------------------------
-
-let s:dict_infoline_text ={'git': 'git',
-                        \ 'line': 'ln',
-                        \ 'lock': 'X',
-                        \ 'read': 'RO',
-                        \ 'mod': '+',
-                        \ 'unmod': '-',
-                        \ 'bad': '!',
-                        \ 'sep_short': '-',
-                        \ 'sep_tall': '|',}
-
-function! GetInfolineChars(dictionary)
-	let l:infoline_dictionary = a:dictionary
-    let g:infoline_git = get(l:infoline_dictionary, 'git', 'git')
-    let g:infoline_line = get(l:infoline_dictionary, 'line', 'ln')
-    let g:infoline_lock = get(l:infoline_dictionary, 'lock', 'X')
-    let g:infoline_read = get(l:infoline_dictionary, 'read', 'RO')
-    let g:infoline_mod = get(l:infoline_dictionary, 'mod', '+')
-    let g:infoline_unmod = get(l:infoline_dictionary, 'unmod', '-')
-    let g:infoline_bad = get(l:infoline_dictionary, 'bad', '!')
-    let g:infoline_sep_short = get(l:infoline_dictionary, 'sep_short', '-')
-    let g:infoline_sep_tall = get(l:infoline_dictionary, 'sep_tall', '|')
-endfunction
-
-" USER PREFS - WHAT CHARS TO USE, WHAT STATUS, WHAT TAB
-let g:infoline_unicode = 6 
-let g:infoline_status = 0
-let g:infoline_tab= 0
-
-if g:infoline_unicode == 0 || g:infoline_unicode >= 4
-    call GetInfolineChars(s:dict_infoline_text)
-endif
-
-"------------------------------------------------------------------------------
-" TABLINE
-"------------------------------------------------------------------------------
-"function! GetTabline()
-"    let l:tabline = ''
-"    for i in range 
-"endfunction
-
-"function! GetTabLabel()
-"endfunction
-"------------------------------------------------------------------------------
-" STATUSLINE
-"------------------------------------------------------------------------------
-" STATUS LINE FUNCTIONS
-
-function! GitInfo()
-    if exists(g:loaded_fugitive)
-        let l:gitbranch = toupper(fugitive#head())
-        if l:gitbranch != ''
-            return '[' .g:infoline_git .'-' .l:gitbranch .']'
-        else
-            return '[' .g:infoline_git .']'
-        endif
-    else
-        return ''
-    endif
-endfunction
-
-" SET A LOCK IF THE DOCUMENT IS READ ONLY AND NOT MODIFIABLE
-function! ReadOnly()
-    if !&modifiable && &readonly
-        return g:infoline_lock .g:infoline_read
-    elseif &modifiable && &readonly
-        return g:infoline_read
-    elseif !&modifiable && !&readonly
-        return g:infoline_lock
-    else
-        return ''
-endfunction
-
-" SET SYMBOLS IF DOCUMENT HAS BEEM MODIFIED (○/+) OR NOT MODIFIED (●/-)
-function! Modified()
-    let l:modstatus = ''
-    if &modified
-        let l:modstatus = g:infoline_mod
-    elseif !&modified
-        let l:modstatus = g:infoline_unmod
-    else
-        let l:modstatus = g:infoline_bad
-    endif
-    return '[' .l:modstatus .']'
-endfunction
-
-" DEFINE MODE DICTIONARY
+" Define mode dictionary
 let s:dictmode= {'n': ['NORMAL', 'green'],
                 \ 'no': ['NORMAL-OP', 'green'],
                 \ 'v': ['VISUAL', 'purple'],
@@ -114,7 +35,7 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
                 \ '!': ['SHELL', 'orange'],
                 \ 't': ['TERMINAL', 'orange']}
 
-" DEFINE COLORS FOR STATUSLINE
+" Define colors for statusline
 let s:dictstatuscolor={'red': 'hi StatusLine guifg=#ab4642',
                         \ 'orange': 'hi StatusLine guifg=#dc9656',
                         \ 'yellow': 'hi StatusLine guifg=#f7ca88',
@@ -123,9 +44,58 @@ let s:dictstatuscolor={'red': 'hi StatusLine guifg=#ab4642',
                         \ 'purple': 'hi StatusLine guifg=#ab4642',
                         \ 'brown': 'hi StatusLine guifg=#7cafc2',}
 
-" GET CURRENT MODE FROM DICTIONARY AND RETURN IT
-" IF MODE IS NOT IN DICTIONARY RETURN THE ABBREVIATION
-" GetMode() GETS THE MODE FROM THE ARRAY THEN RETURNS THE NAME
+" TABLINE
+"function! GetTabline()
+"    let l:tabline = ''
+"    for i in range 
+"endfunction
+
+"function! GetTabLabel()
+"endfunction
+
+" STATUSLINE
+
+function! GitInfo()
+    if exists(g:loaded_fugitive)
+        let l:gitbranch = toupper(fugitive#head())
+        if l:gitbranch != ''
+            return '[' .g:infoline_git .'-' .l:gitbranch .']'
+        else
+            return '[' .g:infoline_git .']'
+        endif
+    else
+        return ''
+    endif
+endfunction
+
+" Set a lock if the document is read only and not modifiable
+function! ReadOnly()
+    if !&modifiable && &readonly
+        return g:infoline_lock .g:infoline_read
+    elseif &modifiable && &readonly
+        return g:infoline_read
+    elseif !&modifiable && !&readonly
+        return g:infoline_lock
+    else
+        return ''
+endfunction
+
+" Set symbols if document has beem modified (○/+) or not modified (●/-)
+function! Modified()
+    let l:modstatus = ''
+    if &modified
+        let l:modstatus = g:infoline_mod
+    elseif !&modified
+        let l:modstatus = g:infoline_unmod
+    else
+        let l:modstatus = g:infoline_bad
+    endif
+    return '[' .l:modstatus .']'
+endfunction
+
+" Get current mode from dictionary and return it
+" If mode is not in dictionary return the abbreviation
+" GetMode() gets the mode from the array then returns the name
 function! GetMode()
     let l:modenow = mode()
     let l:modelist = get(s:dictmode, l:modenow, [l:modenow, 'red'])
@@ -136,7 +106,7 @@ function! GetMode()
         return l:modename
 endfunction
 
-" GET THE SIZE OF THE FILE IN THE BUFFER
+" Get the size of the file in the buffer
 function! GetFileSize()
     let l:filesize = getfsize(expand(@%))
     let l:printsize = 0
@@ -163,26 +133,38 @@ function! GetFileSize()
     return l:printsize .l:byteunit
 endfunction
 
-"------------------------------------------------------------------------------
-" STATUS LINE
-"------------------------------------------------------------------------------
-set statusline=%{Modified()}       " CHECK MODIFIED STATUS
-set statusline+=%{GetMode()}        " GET CURRENT MODE
-set statusline+=[%{ReadOnly()}]     " CHECK READ ONLY AND MODIFIABLE STATUS
-set statusline+=%{GitInfo()}        " GIT BRANCH INFORMATION
-set statusline+=▪%.25F              " PATH TO THE FILE
-set statusline+=%=                  " SWITCH TO RIGHT SIDE OF STATUS LINE
-set statusline+=▪                   " SQUARE SEPARATOR
-set statusline+=%{GetFileSize()}    " GET SIZE OF FILE
-set statusline+=%y                  " TYPE OF THE FILE IN BUFFER
-set statusline+=▪                   " SQUARE SEPARATOR
-set statusline+=%{&ff}              " FORMAT OF THE FILE
-set statusline+=‖                   " COLUMN SEPARATOR
-set statusline+=%02v                " CURRENT COLUMN - 00
+" Get information about curent column in CSV file
+function! GetCsvColInfo ()
+    let l:csvcolinfo = ''
+    if &ft == 'csv'
+        if exists("*CSV_WCol")
+            let l:csvcolname = CSV_WCol("Name")
+            let l:csvcolnum = CSV_WCol()
+            let l:csvcolinfo = '*[' .l:csvcolname. l:csvcolnum. ']'
+        endif
+    endif
+    return l:csvcolinfo
+endfunction
+
+set statusline= " Set statusline to blank
+set statusline=%{Modified()}
+set statusline+=%{GetMode()}
+set statusline+=[%{ReadOnly()}]
+set statusline+=%{GitInfo()}
+set statusline+=%t
+set statusline+=%=  " Switch to right side of statusline
+set statusline+=%{GetCsvColInfo()}
+set statusline+=%{g:infoline_sep_round}
+set statusline+=%{GetFileSize()}
+set statusline+=%y  " Type of file in buffer
+set statusline+=%{g:infoline_sep_round}
+set statusline+=%{&ff}  " Format of the file
+set statusline+=%{g:infoline_sep_tall}
+set statusline+=%03v    " Current column - 000
 set statusline+=%{g:infoline_sep_tall}
 set statusline+=%{g:infoline_line}
-set statusline+=%03l               " CURRENT LINE - 0R00
-set statusline+=/                   " SEPARATOR
-set statusline+=%03L                " TOTAL LINES - 000
-set statusline+=▪                   " SQUARE SEPARATOR
-set statusline+=%P                  " PERCENTAGE THROUGH BUFFER
+set statusline+=%04l    " Current line - 0000
+set statusline+=/   " Separator
+set statusline+=%04L    " Total lines - 0000
+set statusline+=%{g:infoline_sep_round}
+set statusline+=%P  " Percentage through buffer
