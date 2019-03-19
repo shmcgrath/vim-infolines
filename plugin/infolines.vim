@@ -56,24 +56,28 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
 " STATUSLINE
 
 function! GitInfo()
+    let l:gitstatus = ''
     if exists(g:loaded_fugitive)
         let l:gitbranch = %{fugitive#head()}
-        return '[' .g:infoline_git .'-' .l:gitbranch .']'
-    else
-        return ''
+        if l:gitbranch != ''
+            l:gitstatus = '[' .g:infoline_git .'-' .l:gitbranch .']'
+        else
+            l:gitstatus = '[' .g:infoline_git .']'
+        endif
     endif
+    return l:gitstatus
 endfunction
 
 " Set a lock if the document is read only and not modifiable
 function! ReadOnly()
+    let l:rostatus = ''
     if !&modifiable && &readonly
-        return g:infoline_lock .g:infoline_read
+        l:rostatus = g:infoline_lock .g:infoline_read
     elseif &modifiable && &readonly
-        return g:infoline_read
+        l:rostatus = g:infoline_read
     elseif !&modifiable && !&readonly
-        return g:infoline_lock
-    else
-        return ''
+        l:rostatus = g:infoline_lock
+    return l:rostatus
 endfunction
 
 " Set symbols if document has beem modified (○/+) or not modified (●/-)
