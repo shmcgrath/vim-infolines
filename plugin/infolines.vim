@@ -151,7 +151,7 @@ set statusline=%{Modified()}
 set statusline+=%{GetMode()}
 set statusline+=[%{ReadOnly()}]
 set statusline+=%{GitInfo()}
-set statusline+=%{fugitive#statusline()}
+set statusline+=%{g:infoline_sep_round}
 set statusline+=%t
 set statusline+=%=  " Switch to right side of statusline
 set statusline+=%{GetCsvColInfo()}
