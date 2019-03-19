@@ -57,7 +57,7 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
 
 function! GitInfo()
     if exists(g:loaded_fugitive)
-        let l:gitbranch = toupper(%{FugitiveHead()})
+        let l:gitbranch = %{FugitiveHead()}
         if l:gitbranch != ''
             return '[' .g:infoline_git .'-' .l:gitbranch .']'
         else
@@ -151,6 +151,7 @@ set statusline=%{Modified()}
 set statusline+=%{GetMode()}
 set statusline+=[%{ReadOnly()}]
 set statusline+=%{GitInfo()}
+set statusline+=%{fugitive#statusline()}
 set statusline+=%t
 set statusline+=%=  " Switch to right side of statusline
 set statusline+=%{GetCsvColInfo()}
