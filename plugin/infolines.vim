@@ -56,7 +56,7 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
 " STATUSLINE
 
 function! GitInfo()
-    let l:gitstatus = ''
+    let l:gitstatus = 'GitInfo'
     if exists(g:loaded_fugitive)
         let l:gitbranch = ''
         let l:gitbranch = %{fugitive#head()}
@@ -80,6 +80,7 @@ function! ReadOnly()
         let l:rostatus = g:infoline_lock
     endif
     return l:rostatus
+    return '[' .l:rostatus .']'
 endfunction
 
 " Set symbols if document has beem modified (○/+) or not modified (●/-)
@@ -151,7 +152,7 @@ endfunction
 set statusline= " Set statusline to blank
 set statusline=%{Modified()}
 set statusline+=%{GetMode()}
-set statusline+=[%{ReadOnly()}]
+set statusline+=%{ReadOnly()}
 set statusline+=%{GitInfo()}
 set statusline+=%{g:infoline_sep_round}
 set statusline+=%t
