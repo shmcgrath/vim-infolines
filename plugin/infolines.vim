@@ -59,7 +59,7 @@ function! GitInfo()
     let l:gitstatus = ''
     if get(g:, 'loaded_fugitive')
         let l:gitbranch = ''
-        let l:gitbranch = %{fugitive#head()}
+        let l:gitbranch = %{FugitiveHead()}
         if l:gitbranch != ''
             let l:gitstatus = '[' .g:infoline_git .'-' .l:gitbranch .']'
         else
@@ -79,7 +79,6 @@ function! ReadOnly()
     elseif !&modifiable && !&readonly
         let l:rostatus = g:infoline_lock
     endif
-    return l:rostatus
     return '[' .l:rostatus .']'
 endfunction
 
