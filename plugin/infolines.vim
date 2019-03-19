@@ -7,6 +7,10 @@ let g:infoline_git = 'git'
 let g:infoline_line = 'ln'
 let g:infoline_lock = 'X'
 let g:infoline_read = 'RO'
+let g:infoline_help = 'HLP'
+let g:infoline_preview = 'PRV'
+let g:infoline_quickfix = 'QFL'
+let g:infoline_location_list = 'LOCL'
 let g:infoline_mod = '+'
 let g:infoline_unmod = '-'
 let g:infoline_bad = '!'
@@ -108,6 +112,10 @@ function! GetMode()
         return l:modename
 endfunction
 
+function! WinBuffInfo()
+    let l:winbuffstat = ''
+endfunction
+
 " Get the size of the file in the buffer
 function! GetFileSize()
     let l:filesize = getfsize(expand(@%))
@@ -153,6 +161,8 @@ set statusline+=%{Modified()}
 set statusline+=%{GetMode()}
 set statusline+=%{ReadOnly()}
 set statusline+=%{GitInfo()}
+set statusline+=%{g:infoline_sep_round}
+set statusline+=%H%W%q
 set statusline+=%{g:infoline_sep_round}
 set statusline+=%t
 set statusline+=%=  " Switch to right side of statusline
