@@ -14,6 +14,15 @@ let g:infoline_sep_short = '-'
 let g:infoline_sep_tall = '|'
 let g:infoline_sep_round = '*'
 
+" Define colors for statusline
+let s:dictstatuscolor={'red': 'hi StatusLine guifg=#ab4642',
+                        \ 'orange': 'hi StatusLine guifg=#dc9656',
+                        \ 'yellow': 'hi StatusLine guifg=#f7ca88',
+                        \ 'green': 'hi StatusLine guifg=#a1b56c',
+                        \ 'blue': 'hi StatusLine guifg=#7cafc2',
+                        \ 'purple': 'hi StatusLine guifg=#ab4642',
+                        \ 'brown': 'hi StatusLine guifg=#7cafc2',}
+
 " Define mode dictionary
 let s:dictmode= {'n': ['NORMAL', 'green'],
                 \ 'no': ['NORMAL-OP', 'green'],
@@ -34,15 +43,6 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
                 \ 'r?': ['CONFIRM', 'brown'],
                 \ '!': ['SHELL', 'orange'],
                 \ 't': ['TERMINAL', 'orange']}
-
-" Define colors for statusline
-let s:dictstatuscolor={'red': 'hi StatusLine guifg=#ab4642',
-                        \ 'orange': 'hi StatusLine guifg=#dc9656',
-                        \ 'yellow': 'hi StatusLine guifg=#f7ca88',
-                        \ 'green': 'hi StatusLine guifg=#a1b56c',
-                        \ 'blue': 'hi StatusLine guifg=#7cafc2',
-                        \ 'purple': 'hi StatusLine guifg=#ab4642',
-                        \ 'brown': 'hi StatusLine guifg=#7cafc2',}
 
 " TABLINE
 "function! GetTabline()
