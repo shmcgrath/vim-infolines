@@ -59,7 +59,7 @@ function! GitInfo()
     let l:gitstatus = ''
     if get(g:, 'loaded_fugitive')
         let l:gitbranch = ''
-        let l:gitbranch = %{FugitiveHead()}
+        let l:gitbranch = fugitive#head()
         if l:gitbranch != ''
             let l:gitstatus = '[' .g:infoline_git .'-' .l:gitbranch .']'
         else
