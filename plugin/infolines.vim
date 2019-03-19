@@ -56,8 +56,8 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
 " STATUSLINE
 
 function! GitInfo()
-    let l:gitstatus = 'GitInfo'
-    if exists(g:loaded_fugitive)
+    let l:gitstatus = ''
+    if get(g:, 'loaded_fugitive')
         let l:gitbranch = ''
         let l:gitbranch = %{fugitive#head()}
         if l:gitbranch != ''
