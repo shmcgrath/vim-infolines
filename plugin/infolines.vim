@@ -149,7 +149,7 @@ function! GetCsvColInfo ()
 endfunction
 
 set statusline= " Set statusline to blank
-set statusline=%{Modified()}
+set statusline+=%{Modified()}
 set statusline+=%{GetMode()}
 set statusline+=%{ReadOnly()}
 set statusline+=%{GitInfo()}
