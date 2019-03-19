@@ -78,6 +78,7 @@ function! ReadOnly()
         let l:rostatus = g:infoline_read
     elseif !&modifiable && !&readonly
         let l:rostatus = g:infoline_lock
+    endif
     return l:rostatus
 endfunction
 
