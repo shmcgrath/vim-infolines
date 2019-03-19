@@ -57,7 +57,7 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
 
 function! GitInfo()
     if exists(g:loaded_fugitive)
-        let l:gitbranch = %{FugitiveHead()}
+        let l:gitbranch = %{fugitive#head()}
         if l:gitbranch != ''
             return '[' .g:infoline_git .'-' .l:gitbranch .']'
         else
