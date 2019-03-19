@@ -58,11 +58,12 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
 function! GitInfo()
     let l:gitstatus = ''
     if exists(g:loaded_fugitive)
+        let l:gitbranch = ''
         let l:gitbranch = %{fugitive#head()}
         if l:gitbranch != ''
-            l:gitstatus = '[' .g:infoline_git .'-' .l:gitbranch .']'
+            let l:gitstatus = '[' .g:infoline_git .'-' .l:gitbranch .']'
         else
-            l:gitstatus = '[' .g:infoline_git .']'
+            let l:gitstatus = '[' .g:infoline_git .']'
         endif
     endif
     return l:gitstatus
@@ -72,11 +73,11 @@ endfunction
 function! ReadOnly()
     let l:rostatus = ''
     if !&modifiable && &readonly
-        l:rostatus = g:infoline_lock .g:infoline_read
+        let l:rostatus = g:infoline_lock .g:infoline_read
     elseif &modifiable && &readonly
-        l:rostatus = g:infoline_read
+        let l:rostatus = g:infoline_read
     elseif !&modifiable && !&readonly
-        l:rostatus = g:infoline_lock
+        let l:rostatus = g:infoline_lock
     return l:rostatus
 endfunction
 
