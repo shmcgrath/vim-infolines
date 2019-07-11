@@ -157,7 +157,7 @@ function! GetCsvColInfo ()
 endfunction
 
 function! GetLinterInfo()
-    if g:ale_enabled
+    if g:ale_enabled == 1
         let l:counts = ale#statusline#Count(bufnr(''))
 
         let l:all_errors = l:counts.error + l:counts.style_error
