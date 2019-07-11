@@ -156,8 +156,8 @@ function! GetCsvColInfo ()
     return l:csvcolinfo
 endfunction
 
-function! GetLinterInfo()
-    if g:ale_enabled == 1
+function! GetLinterInfo() abort
+    if exists (g:ale_enabled)
         let l:counts = ale#statusline#Count(bufnr(''))
 
         let l:all_errors = l:counts.error + l:counts.style_error
@@ -179,7 +179,7 @@ set statusline+=%{GitInfo()}
 set statusline+=%{g:infoline_sep_round}
 set statusline+=%t
 set statusline+=%{g:infoline_sep_round}
-set statusline+=%(GetLinterInfo}
+set statusline+=%{GetLinterInfo()}
 set statusline+=%{g:infoline_sep_round}
 set statusline+=%h%w%q
 set statusline+=%=  " Switch to right side of statusline
