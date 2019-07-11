@@ -60,56 +60,72 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
 " STATUSLINE
 
 function! GitInfo()
-    let l:gitstatus = ''
-    if get(g:, 'loaded_fugitive')
-        let l:gitbranch = ''
-        let l:gitbranch = fugitive#head()
-        if l:gitbranch != ''
-            let l:gitstatus = '[' .g:infoline_git .'-' .l:gitbranch .']'
-        else
-            let l:gitstatus = '[' .g:infoline_git .']'
+    try
+        let l:gitstatus = ''
+        if get(g:, 'loaded_fugitive')
+            let l:gitbranch = ''
+            let l:gitbranch = fugitive#head()
+            if l:gitbranch != ''
+                let l:gitstatus = '[' .g:infoline_git .'-' .l:gitbranch .']'
+            else
+                let l:gitstatus = '[' .g:infoline_git .']'
+            endif
         endif
-    endif
-    return l:gitstatus
+        return l:gitstatus
+    catch
+        return "GitInfo Error: " . v:exception
+    endtry
 endfunction
 
 " Set a lock if the document is read only and not modifiable
 function! ReadOnly()
-    let l:rostatus = ''
-    if !&modifiable && &readonly
-        let l:rostatus = g:infoline_lock .g:infoline_read
-    elseif &modifiable && &readonly
-        let l:rostatus = g:infoline_read
-    elseif !&modifiable && !&readonly
-        let l:rostatus = g:infoline_lock
-    endif
-    return '[' .l:rostatus .']'
+    try
+        let l:rostatus = ''
+        if !&modifiable && &readonly
+            let l:rostatus = g:infoline_lock .g:infoline_read
+        elseif &modifiable && &readonly
+            let l:rostatus = g:infoline_read
+        elseif !&modifiable && !&readonly
+            let l:rostatus = g:infoline_lock
+        endif
+        return '[' .l:rostatus .']'
+    catch
+        return "ReadOnly Error: " . v:exception
+    endtry
 endfunction
 
 " Set symbols if document has beem modified (○/+) or not modified (●/-)
 function! Modified()
-    let l:modstatus = ''
-    if &modified
-        let l:modstatus = g:infoline_mod
-    elseif !&modified
-        let l:modstatus = g:infoline_unmod
-    else
-        let l:modstatus = g:infoline_bad
-    endif
-    return '[' .l:modstatus .']'
+    try
+        let l:modstatus = ''
+        if &modified
+            let l:modstatus = g:infoline_mod
+        elseif !&modified
+            let l:modstatus = g:infoline_unmod
+        else
+            let l:modstatus = g:infoline_bad
+        endif
+        return '[' .l:modstatus .']'
+    catch
+        return "Modified Error: " . v:exception
+    endtry
 endfunction
 
 " Get current mode from dictionary and return it
 " If mode is not in dictionary return the abbreviation
 " GetMode() gets the mode from the array then returns the name
 function! GetMode()
-    let l:modenow = mode()
-    let l:modelist = get(s:dictmode, l:modenow, [l:modenow, 'red'])
-    let l:modecolor = l:modelist[1]
-    let l:modename = l:modelist[0]
-    let l:modeexe = get(s:dictstatuscolor, l:modecolor, 'red')
-        exec l:modeexe
-        return l:modename
+    try
+        let l:modenow = mode()
+        let l:modelist = get(s:dictmode, l:modenow, [l:modenow, 'red'])
+        let l:modecolor = l:modelist[1]
+        let l:modename = l:modelist[0]
+        let l:modeexe = get(s:dictstatuscolor, l:modecolor, 'red')
+            exec l:modeexe
+            return l:modename
+    catch
+        return "GetMode Error: " . v:exception
+    endtry
 endfunction
 
 function! WinBuffInfo()
@@ -118,51 +134,61 @@ endfunction
 
 " Get the size of the file in the buffer
 function! GetFileSize()
-    let l:filesize = getfsize(expand(@%))
-    let l:printsize = 0
-    let l:byteunit = ''
-    if l:filesize >= 1099511627776
-        let l:printsize = l:filesize / 1099511627776
-        let l:byteunit = 'TB'
-    elseif l:filesize >= 1073741824
-        let l:printsize = l:filesize / 1073741824
-        let l:byteunit = 'GB'
-    elseif l:filesize >= 1048576
-        let l:printsize = l:filesize / 1048576
-        let l:byteunit = 'MB'
-    elseif l:filesize >= 1024
-        let l:printsize = l:filesize / 1024
-        let l:byteunit = 'KB'
-    elseif l:filesize < 1024
-        let l:printsize = l:filesize
-        let l:byteunit = 'B'
-    elseif l:filesize <= 0
+    try
+        let l:filesize = getfsize(expand(@%))
         let l:printsize = 0
-        let l:byteunit = 'B'
-    endif
-    return l:printsize .l:byteunit
+        let l:byteunit = ''
+        if l:filesize >= 1099511627776
+            let l:printsize = l:filesize / 1099511627776
+            let l:byteunit = 'TB'
+        elseif l:filesize >= 1073741824
+            let l:printsize = l:filesize / 1073741824
+            let l:byteunit = 'GB'
+        elseif l:filesize >= 1048576
+            let l:printsize = l:filesize / 1048576
+            let l:byteunit = 'MB'
+        elseif l:filesize >= 1024
+            let l:printsize = l:filesize / 1024
+            let l:byteunit = 'KB'
+        elseif l:filesize < 1024
+            let l:printsize = l:filesize
+            let l:byteunit = 'B'
+        elseif l:filesize <= 0
+            let l:printsize = 0
+            let l:byteunit = 'B'
+        endif
+        return l:printsize .l:byteunit
+    catch
+        return "GetFileSize Error: " . v:exception
+    endtry
 endfunction
 
 " Get information about curent column in CSV file
 function! GetCsvColInfo ()
-    let l:csvcolinfo = ''
-    if &ft == 'csv'
-        if exists("*CSV_WCol")
-            let l:csvcolname = CSV_WCol("Name")
-            let l:csvcolnum = CSV_WCol()
-            let l:csvcolinfo = '*[' .l:csvcolname. l:csvcolnum. ']'
+    try
+        let l:csvcolinfo = ''
+        if &ft == 'csv'
+            if exists("*CSV_WCol")
+                let l:csvcolname = CSV_WCol("Name")
+                let l:csvcolnum = CSV_WCol()
+                let l:csvcolinfo = '*[' .l:csvcolname. l:csvcolnum. ']'
+            endif
         endif
-    endif
-    return l:csvcolinfo
+        return l:csvcolinfo
+    catch
+        return "GetCsvColInfo Error: " . v:exception
+    endtry
 endfunction
 
 function! GetLinterInfo() abort
-    if exists (g:ale_enabled)
+    try
         let l:counts = ale#statusline#Count(bufnr('%'))
         let l:all_errors = l:counts.error + l:counts.style_error
         let l:all_non_errors = l:counts.total - l:all_errors
         return l:counts.total == 0 ? 'OK' : printf('%dW %dE', all_non_errors, all_errors)
-    endif
+    catch
+        return "GetLinterInfo Error: " . v:exception
+    endtry
 endfunction
 
 set statusline= " Set statusline to blank
