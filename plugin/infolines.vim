@@ -121,7 +121,6 @@ function! GetMode()
         let l:modecolor = l:modelist[1]
         let l:modename = l:modelist[0]
         let l:modeexe = get(s:dictstatuscolor, l:modecolor, 'red')
-            exec l:modeexe
             return l:modename
     catch
         return "GetMode Error: " . v:exception
