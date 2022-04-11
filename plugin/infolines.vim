@@ -19,13 +19,13 @@ let g:infoline_sep_tall = '|'
 let g:infoline_sep_round = '*'
 
 " Define colors for statusline
-let s:dictstatuscolor={'red': 'hi StatusLine guifg=#ab4642, guibg=#abacaa',
-                        \ 'orange': 'hi StatusLine guifg=#dc9656, guibg=#abacaa',
-                        \ 'yellow': 'hi StatusLine guifg=#f7ca88, guibg=#abacaa',
-                        \ 'green': 'hi StatusLine guifg=#a1b56c, guibg=#abacaa',
-                        \ 'blue': 'hi StatusLine guifg=#7cafc2, guibg=#abacaa',
-                        \ 'purple': 'hi StatusLine guifg=#ab4642, guibg=#abacaa',
-                        \ 'brown': 'hi StatusLine guifg=#7cafc2, guibg=#abacaa',}
+let s:dictstatuscolor={'red': 'hi StatusLine guifg=#ab4642 guibg=#abacaa',
+                        \ 'orange': 'hi StatusLine guifg=#dc9656 guibg=#abacaa',
+                        \ 'yellow': 'hi StatusLine guifg=#f7ca88 guibg=#abacaa',
+                        \ 'green': 'hi StatusLine guifg=#a1b56c guibg=#abacaa',
+                        \ 'blue': 'hi StatusLine guifg=#7cafc2 guibg=#abacaa',
+                        \ 'purple': 'hi StatusLine guifg=#ab4642 guibg=#abacaa',
+                        \ 'brown': 'hi StatusLine guifg=#7cafc2 guibg=#abacaa',}
 
 " Define mode dictionary
 let s:dictmode= {'n': ['NORMAL', 'green'],
