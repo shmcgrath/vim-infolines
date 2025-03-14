@@ -180,14 +180,18 @@ function! GetCsvColInfo ()
 endfunction
 
 function! GetLinterInfo() abort
-    try
-        let l:counts = ale#statusline#Count(bufnr('%'))
-        let l:all_errors = l:counts.error + l:counts.style_error
-        let l:all_non_errors = l:counts.total - l:all_errors
-        return l:counts.total == 0 ? 'OK' : printf('%dW %dE', all_non_errors, all_errors)
-    catch
-        return "GetLinterInfo Error: " . v:exception
-    endtry
+	if exists(':ALEEnable')
+		try
+			let l:counts = ale#statusline#Count(bufnr('%'))
+			let l:all_errors = l:counts.error + l:counts.style_error
+			let l:all_non_errors = l:counts.total - l:all_errors
+			return l:counts.total == 0 ? 'OK' : printf('%dW %dE', all_non_errors, all_errors)
+		catch
+			return "GetLinterInfo Error: " . v:exception
+		endtry
+	else
+		return "ALE NOT INST."
+	endif
 endfunction
 
 set statusline= " Set statusline to blank
