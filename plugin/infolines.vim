@@ -61,17 +61,9 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
 
 function! GitInfo()
     try
-        let l:gitstatus = ''
         if get(g:, 'loaded_fugitive')
-            let l:gitbranch = ''
-            let l:gitbranch = fugitive#head()
-            if l:gitbranch != ''
-                let l:gitstatus = '[' .g:infoline_git .'-' .l:gitbranch .']'
-            else
-                let l:gitstatus = '[' .g:infoline_git .']'
-            endif
+			return FugitiveStatusline()
         endif
-        return l:gitstatus
     catch
         return "GitInfo Error: " . v:exception
     endtry
@@ -224,7 +216,7 @@ set statusline+=%{g:infoline_sep_round}
 set statusline+=%t
 set statusline+=%{g:infoline_sep_round}
 "set statusline+=%{GetLinterInfo()}
-set statusline+=%{LinterStatus()}
+"set statusline+=%{LinterStatus()}
 set statusline+=%{g:infoline_sep_round}
 set statusline+=%h%w%q
 set statusline+=%=  " Switch to right side of statusline
