@@ -179,20 +179,41 @@ function! GetCsvColInfo ()
     endtry
 endfunction
 
-function! GetLinterInfo() abort
-	if exists(':ALEEnable')
+"function! GetLinterInfo() abort
+	"if exists(':ALEEnable')
+		"try
+			"let l:counts = ale#statusline#Count(bufnr('%'))
+			"let l:all_errors = l:counts.error + l:counts.style_error
+			"let l:all_non_errors = l:counts.total - l:all_errors
+			"return l:counts.total == 0 ? 'OK' : printf('%dW %dE', all_non_errors, all_errors)
+		"catch
+			"return "GetLinterInfo Error: " . v:exception
+		"endtry
+	"else
+		"return "ALE NOT INST."
+	"endif
+"endfunction
+
+" This is the recommended LinterStatus() function from ALE docs
+function! LinterStatus() abort
+	if exists('g:ale_enabled')
 		try
-			let l:counts = ale#statusline#Count(bufnr('%'))
+			let l:counts = ale#statusline#Count(bufnr(''))
+
 			let l:all_errors = l:counts.error + l:counts.style_error
 			let l:all_non_errors = l:counts.total - l:all_errors
-			return l:counts.total == 0 ? 'OK' : printf('%dW %dE', all_non_errors, all_errors)
+
+			return l:counts.total == 0 ? 'OK' : printf(
+			\   '%dW %dE',
+			\   all_non_errors,
+			\   all_errors
+			\)
 		catch
-			return "GetLinterInfo Error: " . v:exception
+			return "LinterStatus Error: " . v:exception
 		endtry
-	else
-		return "ALE NOT INST."
 	endif
 endfunction
+
 
 set statusline= " Set statusline to blank
 set statusline+=%{Modified()}
@@ -202,7 +223,8 @@ set statusline+=%{GitInfo()}
 set statusline+=%{g:infoline_sep_round}
 set statusline+=%t
 set statusline+=%{g:infoline_sep_round}
-set statusline+=%{GetLinterInfo()}
+"set statusline+=%{GetLinterInfo()}
+set statusline+=%{LinterStatus()}
 set statusline+=%{g:infoline_sep_round}
 set statusline+=%h%w%q
 set statusline+=%=  " Switch to right side of statusline
