@@ -1,12 +1,12 @@
 " infolines.vim
 " Author: Sarah H. McGrath <https://www.shmcgrath.com>
-" Version: 0.0.3
+" Version: 0.0.4
 
 " Global Infoline symbol variables
 let g:infoline_git = 'git'
 let g:infoline_line = 'ln'
 let g:infoline_lock = 'X'
-let g:infoline_read = 'RO'
+let g:infoline_readonly = 'RO'
 let g:infoline_help = 'HLP'
 let g:infoline_preview = 'PRV'
 let g:infoline_quickfix = 'QFL'
@@ -16,7 +16,7 @@ let g:infoline_unmod = '-'
 let g:infoline_bad = '!'
 let g:infoline_sep_short = '-'
 let g:infoline_sep_tall = '|'
-let g:infoline_sep_round = '*'
+let g:infoline_sep_round = '●'
 
 " Define colors for statusline
 let s:dictstatuscolor={'red': 'hi StatusLine guifg=#660000',
@@ -48,17 +48,25 @@ let s:dictmode= {'n': ['NORMAL', 'green'],
                 \ '!': ['SHELL', 'orange'],
                 \ 't': ['TERMINAL', 'orange']}
 
-" TABLINE
-"function! GetTabline()
-"    let l:tabline = ''
-"    for i in range 
-"endfunction
-
-"function! GetTabLabel()
-"endfunction
+let s:dict_special_labels = {
+	\ 'filetype:Outline':     'Symbols',
+	\ 'filetype:checkhealth': 'Health',
+	\ 'filetype:dashboard':   'Dashboard',
+	\ 'filetype:fzf':         'FZF',
+	\ 'filetype:fzf-lua':     'FZF',
+	\ 'filetype:gitcommit':   'Commit',
+	\ 'filetype:lspinfo':     'LSP',
+	\ 'filetype:man':         'Man',
+	\ 'filetype:netrw':       'netrw',
+	\ 'filetype:oil':         'Oil',
+	\ 'buftype:help':         'Help',
+	\ 'buftype:nofile':       'Scratch',
+	\ 'buftype:prompt':       'Prompt',
+	\ 'buftype:quickfix':     'Quickfix',
+	\ 'buftype:terminal':     'Terminal',
+\ }
 
 " STATUSLINE
-
 function! GitInfo()
     try
         if get(g:, 'loaded_fugitive')
@@ -74,9 +82,9 @@ function! ReadOnly()
     try
         let l:rostatus = ''
         if !&modifiable && &readonly
-            let l:rostatus = g:infoline_lock .g:infoline_read
+            let l:rostatus = g:infoline_lock .g:infoline_readonly
         elseif &modifiable && &readonly
-            let l:rostatus = g:infoline_read
+            let l:rostatus = g:infoline_readonly
         elseif !&modifiable && !&readonly
             let l:rostatus = g:infoline_lock
         endif
@@ -206,6 +214,13 @@ function! LinterStatus() abort
 	endif
 endfunction
 
+"Then define the MyTabLine() function to list all the tab pages labels.  A
+"convenient method is to split it in two parts:  First go over all the tab
+"pages and define labels for them.  Then get the label for each tab page. >
+
+"For basics see the 'statusline' option.  The same items can be used in the
+"'tabline' option.  Additionally, the |tabpagebuflist()|, |tabpagenr()| and
+"|tabpagewinnr()| functions are useful.
 
 set statusline= " Set statusline to blank
 set statusline+=%{Modified()}
@@ -213,11 +228,10 @@ set statusline+=%{GetMode()}
 set statusline+=%{ReadOnly()}
 set statusline+=%{GitInfo()}
 set statusline+=%{g:infoline_sep_round}
-set statusline+=%t
-set statusline+=%{g:infoline_sep_round}
 "set statusline+=%{GetLinterInfo()}
 "set statusline+=%{LinterStatus()}
 set statusline+=%{g:infoline_sep_round}
+"display %h (help) %w (preview window) %q (quickfix or local list)
 set statusline+=%h%w%q
 set statusline+=%=  " Switch to right side of statusline
 set statusline+=%{GetCsvColInfo()}
@@ -235,3 +249,75 @@ set statusline+=/   " Separator
 set statusline+=%04L    " Total lines - 0000
 set statusline+=%{g:infoline_sep_round}
 set statusline+=%P  " Percentage through buffer
+
+function InfolinesTabLine() abort
+  let s = ''
+  for i in range(tabpagenr('$'))
+	" select the highlighting
+	if i + 1 == tabpagenr()
+	  let s .= '%#TabLineSel#'
+	else
+	  let s .= '%#TabLine#'
+	endif
+
+	" set the tab page number (for mouse clicks)
+	let s .= '%' .. (i + 1) .. 'T'
+
+	" the label is made by InfolinesTabLabel()
+	let s .= ' %{InfolinesTabLabel(' .. (i + 1) .. ')} '
+  endfor
+
+  " after the last tab fill with TabLineFill and reset tab page nr
+  let s .= '%#TabLineFill#%T'
+
+  " right-align the label to close the current tab page
+  if tabpagenr('$') > 1
+	let s .= '%=%#TabLine#%999Xclose'
+  endif
+
+  return s
+endfunction
+
+"Now the MyTabLabel() function is called for each tab page to get its label. >
+
+function InfolinesTabLabel(tab) abort
+	let buflist = tabpagebuflist(a:tab)
+	let winnr = tabpagewinnr(a:tab)
+	let bufnumber = get(buflist, winnr - 1, -1)
+	if bufnumber == -1
+		return 'No Buffers'
+	endif
+	let fullpath = bufname(bufnumber)
+	let filename = empty(fullpath) ? 'No Name' : fnamemodify(fullpath, ':t')
+	let filetype = getbufvar(bufnumber, '&filetype')
+	let buftype = getbufvar(bufnumber, '&buftype')
+
+	let ft_key = 'filetype:' .. filetype
+	let bt_key = 'buftype:' .. buftype
+
+	if has_key(s:dict_special_labels, ft_key)
+		let label = s:dict_special_labels[ft_key]
+	elseif has_key(s:dict_special_labels, bt_key)
+		let label = s:dict_special_labels[bt_key]
+	elseif empty(fullpath)
+		let ft = empty(filetype) ? 'FT' : filetype
+		let bt = empty(buftype) ? 'BT' : buftype
+		let label = ft .. bt
+	else
+		let label = filename
+	endif
+
+	let label = printf('[%02d|%s]', a:tab, label)
+
+	for b in buflist
+		let binfo = getbufinfo(b)
+		if !empty(binfo) && binfo[0].changed
+			let label = '+' .. label
+			break
+		endif
+	endfor
+
+	return label
+endfunction
+
+set tabline=%!InfolinesTabLine()
