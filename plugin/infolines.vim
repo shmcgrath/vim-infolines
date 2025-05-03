@@ -228,9 +228,10 @@ set statusline+=%{GetMode()}
 set statusline+=%{ReadOnly()}
 set statusline+=%{GitInfo()}
 set statusline+=%{g:infoline_sep_round}
+set statusline+=%t
+set statusline+=%{g:infoline_sep_round}
 "set statusline+=%{GetLinterInfo()}
 "set statusline+=%{LinterStatus()}
-set statusline+=%{g:infoline_sep_round}
 "display %h (help) %w (preview window) %q (quickfix or local list)
 set statusline+=%h%w%q
 set statusline+=%=  " Switch to right side of statusline
